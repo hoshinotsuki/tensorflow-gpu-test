@@ -88,3 +88,11 @@ If we don't randomize the data properly before creating training and validation 
 Next, we'll train a linear regressor using all the features in the data set, and see how well we do.  
 Let's define the same input function we've used previously for loading the data into a TensorFlow model.  
 
+## Task 5: Evaluate on Test Data
+
+**In the cell below, load in the test data set and evaluate your model on it.**
+We've done a lot of iteration on our validation data.  Let's make sure we haven't overfit to the pecularities of that particular sample.  
+How does your test performance compare to the validation performance?   
+What does this say about the generalization performance of your model?  
+
+
