@@ -2,14 +2,13 @@ from __future__ import print_function
 
 import math
 
-from IPython import display
-from matplotlib import cm
-from matplotlib import gridspec
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import sklearn.metrics as metrics
 import tensorflow as tf
+from IPython import display
+from matplotlib import cm
 from tensorflow.python.data import Dataset
 
 tf.logging.set_verbosity(tf.logging.ERROR)
