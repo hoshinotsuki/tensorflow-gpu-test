@@ -15,14 +15,14 @@
 重点关注偏离这条线的点。我们注意到这些点的数量相对较少。  
 查看 rooms_per_person 中值的分布情况，将这些异常情况追溯到源数据。  
 如果我们绘制 rooms_per_person 的直方图，则会发现我们的输入数据中有少量离群值。  
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/Figure_1_old.png)
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/synthetic_features_and_outliers/Figure_1_old.png)
 （未处理离群值前）
 
 ### 5.截取离群值  
 创建的直方图显示，大多数值都小于 5。  
 我们将 rooms_per_person 的值截取为 5，然后绘制直方图以再次检查结果。  
 为了验证截取是否有效，我们再训练一次模型，并再次输出校准数据。  
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/Figure_2_new.png)
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/synthetic_features_and_outliers/Figure_2_new.png)
 （处理离群值后）
 </br></br></br>
 
