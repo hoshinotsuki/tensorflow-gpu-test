@@ -2,14 +2,13 @@ from __future__ import print_function
 
 import math
 
-from IPython import display
-from matplotlib import cm
-from matplotlib import gridspec
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn import metrics
+import sklearn.metrics as metrics
 import tensorflow as tf
+from IPython import display
+from matplotlib import cm
 from tensorflow.python.data import Dataset
 
 # -*- coding: utf-8 -*-
@@ -18,14 +17,15 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 pd.options.display.max_rows = 10
 pd.options.display.float_format = '{:.1f}'.format
 
-california_housing_dataframe = pd.read_csv("https://download.mlcc.google.com/mledu-datasets/california_housing_train.csv", sep=",")
+california_housing_dataframe = pd.read_csv("D:\datas\california_housing_train.csv", sep=",")
 
+#加list才有随机化效果，我也不知道为什么
 california_housing_dataframe = california_housing_dataframe.reindex(
-    np.random.permutation(california_housing_dataframe.index))
+    np.random.permutation(list(california_housing_dataframe.index)))
+
 
 def preprocess_features(california_housing_dataframe):
   """Prepares input features from California housing data set.
-
   Args:
     california_housing_dataframe: A Pandas DataFrame expected to contain data
       from the California housing data set.
@@ -51,7 +51,6 @@ def preprocess_features(california_housing_dataframe):
 
 def preprocess_targets(california_housing_dataframe):
   """Prepares target features (i.e., labels) from California housing data set.
-
   Args:
     california_housing_dataframe: A Pandas DataFrame expected to contain data
       from the California housing data set.
@@ -64,23 +63,21 @@ def preprocess_targets(california_housing_dataframe):
     california_housing_dataframe["median_house_value"] / 1000.0)
   return output_targets
 
+
 """For the **training set**, we'll choose the first 12000 examples, out of the total of 17000."""
 training_examples = preprocess_features(california_housing_dataframe.head(12000))
 training_targets = preprocess_targets(california_housing_dataframe.head(12000))
 
 """For the **validation set**, we'll choose the last 5000 examples, out of the total of 17000."""
-
 validation_examples = preprocess_features(california_housing_dataframe.tail(5000))
 validation_targets = preprocess_targets(california_housing_dataframe.tail(5000))
-
 
 """
 ## Task 1: Examine the Data 
 ## Task 2: Plot Latitude/Longitude vs. Median House Value
 """
-
-plt.figure(figsize=(13, 8))
-ax = plt.subplot(1, 2, 1)
+plt.figure(num=1,figsize=(13, 8))
+ax = plt.subplot(1, 2, 2)
 ax.set_title("Validation Data")
 ax.set_autoscaley_on(False)
 ax.set_ylim([32, 43])
@@ -91,7 +88,7 @@ plt.scatter(validation_examples["longitude"],
             cmap="coolwarm",
             c=validation_targets["median_house_value"] / validation_targets["median_house_value"].max())
 
-ax = plt.subplot(1,2,2)
+ax = plt.subplot(1,2,1)
 ax.set_title("Training Data")
 ax.set_autoscaley_on(False)
 ax.set_ylim([32, 43])
@@ -102,13 +99,12 @@ plt.scatter(training_examples["longitude"],
             cmap="coolwarm",
             c=training_targets["median_house_value"] / training_targets["median_house_value"].max())
 _ = plt.plot()
-plt.show()
+
 
 """ 
 ## Task 3:  Return to the Data Importing and Pre-Processing Code, and See if You Spot Any Bugs
 ## Task 4: Train and Evaluate a Model 
 """
-
 def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
     """Trains a linear regression model of multiple features.
   
@@ -136,9 +132,7 @@ def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
     # Return the next batch of data.
     features, labels = ds.make_one_shot_iterator().get_next()
     return features, labels
-
 """Because we're now working with multiple input features, let's modularize our code for configuring feature columns into a separate function. (For now, this code is fairly simple, as all our features are numeric, but we'll build on this code as we use other types of features in future exercises.)"""
-
 def construct_feature_columns(input_features):
   """Construct the TensorFlow Feature Columns.
 
@@ -149,8 +143,6 @@ def construct_feature_columns(input_features):
   """ 
   return set([tf.feature_column.numeric_column(my_feature)
               for my_feature in input_features])
-
-
 def train_model(
     learning_rate,
     steps,
@@ -241,6 +233,7 @@ def train_model(
   print("Model training finished.")
 
   # Output a graph of loss metrics over periods.
+  plt.figure(num=3, figsize=(8, 8))
   plt.ylabel("RMSE")
   plt.xlabel("Periods")
   plt.title("Root Mean Squared Error vs. Periods")
@@ -248,7 +241,6 @@ def train_model(
   plt.plot(training_rmse, label="training")
   plt.plot(validation_rmse, label="validation")
   plt.legend()
-  plt.show()
   return linear_regressor
 
 linear_regressor = train_model(
@@ -262,24 +254,18 @@ linear_regressor = train_model(
     validation_targets=validation_targets)
 
 """## Task 5: Evaluate on Test Data"""
-
-california_housing_test_data = pd.read_csv("https://download.mlcc.google.com/mledu-datasets/california_housing_test.csv", sep=",")
+california_housing_test_data = pd.read_csv("D:\datas\california_housing_test.csv", sep=",")
 # 加上随机化处理，否则训练集和验证集的分布不一致
 california_housing_test_data = california_housing_test_data.reindex(
-    np.random.permutation(california_housing_test_data.index))
+    np.random.permutation(list(california_housing_test_data.index)))
 
 # 检查数据
 testing_examples = preprocess_features(california_housing_test_data)
-testing_examples.describe()
-
 testing_targets  = preprocess_targets(california_housing_test_data)
-testing_targets.describe()
 
-plt.figure(figsize=(13, 8))
-
+plt.figure(num=2,figsize=(13, 8))
 ax = plt.subplot(1, 2, 1)
 ax.set_title("Validation Data")
-
 ax.set_autoscaley_on(False)
 ax.set_ylim([32, 43])
 ax.set_autoscalex_on(False)
@@ -291,7 +277,6 @@ plt.scatter(validation_examples["longitude"],
 
 ax = plt.subplot(1,2,2)
 ax.set_title("Testing Data")
-
 ax.set_autoscaley_on(False)
 ax.set_ylim([32, 43])
 ax.set_autoscalex_on(False)
@@ -301,19 +286,12 @@ plt.scatter(testing_examples["longitude"],
             cmap="coolwarm",
             c=testing_targets["median_house_value"] / testing_targets["median_house_value"].max())
 _ = plt.plot()
-plt.show()
 
 """Prediction and Evaluation"""
-
-california_housing_test_data = pd.read_csv("https://download.mlcc.google.com/mledu-datasets/california_housing_test.csv", sep=",")
-
-test_examples = preprocess_features(california_housing_test_data)
-test_targets = preprocess_targets(california_housing_test_data)
-
 # 预测 不是训练，所以用API.predict
 predict_test_input_fn = lambda: my_input_fn(
-      test_examples, 
-      test_targets["median_house_value"], 
+      testing_examples,
+      testing_targets["median_house_value"],
       num_epochs=1, 
       shuffle=False)
 
@@ -323,7 +301,8 @@ test_predictions = linear_regressor.predict(input_fn=predict_test_input_fn)
 test_predictions = np.array([item['predictions'][0] for item in test_predictions])
 
 root_mean_squared_error = math.sqrt(
-    metrics.mean_squared_error(test_predictions, test_targets))
+    metrics.mean_squared_error(test_predictions, testing_targets))
 
 print("Final RMSE (on test data): %0.2f" % root_mean_squared_error)
 
+plt.show()
