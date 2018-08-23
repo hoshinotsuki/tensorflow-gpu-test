@@ -24,16 +24,59 @@
 为了验证截取是否有效，我们再训练一次模型，并再次输出校准数据。  
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/Figure_2_new.png)
 （处理离群值后）
+</br></br></br>
 
-
-## 2.Validation
+## 二、设置验证集：避免过拟合的风险
 we're working with the California housing data set,to try and predict median_house_value at the city block level from 1990 census data.  
 
-### Setup
-#### First off, let's load up and prepare our data.
-##### # 加上随机化处理，否则训练集和验证集的分布不一致
+### 1.Setup
+First off, let's load up and prepare our data.  
+加上随机化处理，否则训练集和验证集的分布不一致
+
+This time, we're going to work with multiple features,
+so we'll modularize the logic for preprocessing the features a bit:
+
+For the training set, we'll choose the first 12000 examples, out of the total of 17000.
+For the validation set, we'll choose the last 5000 examples, out of the total of 17000.
+
+## Task 1: Examine the Data 
+Let's check our data against some baseline expectations:  
+1.For some values, like median_house_value,we can check to see if these values fall within reasonable ranges (keeping in mind this was 1990 data — not today!).  
+2.For other values, like latitude and longitude,we can do a quick check to see if these line up with位于合理的范围内expected values from a quick Google search.
+If you look closely, you may see some oddities:  
+3.median_income is on a scale from about 3 to 15.It's not at all clear what this scale refers to—looks like maybe some log scale?It's not documented anywhere; all we can assume is that higher values correspond to higher income.  
+4.The maximum median_house_value is 500,001. This looks like an artificial cap of some kind人为上限.  
+5.Our rooms_per_person feature is generally on a sane scale正常范围, with a 75th percentile value of about 2.But there are some very large values, like 18 or 55, which may show some amount of corruption in the data.  
+We'll use these features as given for now.But hopefully these kinds of examples can help to build a little intuition about how to check data that comes to you from an unknown source.
+
+## Task 2: Plot Latitude/Longitude vs. Median House Value
+Let's take a close look at two features in particular:
+latitude and longitude. These are geographical coordinates of the city block in question.
+This might make a nice visualization -let's plot latitude and longitude, and use color to show the median_house_value.
 
 
+# 封装成一个验证数据集的函数
+
+Wait a second...this should have given us a nice map of the state of California,with red showing up in expensive areas like the San Francisco and Los Angeles.红色表示高房价，像洛杉矶  
+The training set sort of does, compared to a real map, but the validation set clearly doesn't.训练集（12/17）比验证集（5/17）更像一个真正的地图，因为没有随机化    
+Looking at the tables of summary stats above, it's easy to wonder how anyone would do a useful data check.如何做一个有效的数据检查  
+The key thing to notice is that for any given feature or column, 对于每个特征和特征列  
+the distribution of values between the train and validation splits should be roughly equal.训练集和验证集的划分应该一致  
+The fact that this is not the case is a real worry, 真正担心的是事实不是这样  
+and shows that we likely have a fault in the way that our train and validation split was created.说明区分训练集和验证集时有错误  
+
+## Task 3: Return to the Data Importing and Pre-Processing Code, and See if You Spot Any Bugs  
+If you do, go ahead and fix the bug. Don't spend more than a minute or two looking. If you can't find the bug, check the solution.  
+When you've found and fixed the issue, re-run latitude / longitude plotting cell above and confirm that our sanity checks look better.
+By the way, there's an important lesson here.Debugging in ML is often data debugging rather than code debugging.  
+重要：ML的调试是数据调试，不是代码调试  
+If the data is wrong, even the most advanced ML code can't save things.  
+
+Take a look at how the data is randomized when it's read in.数据读入的时候是否随机化  
+If we don't randomize the data properly before creating training and validation splits,then we may be in trouble if the data is given to us in some sorted order, which appears to be the case here.  
 
 
+## Task 4: Train and Evaluate a Model  
+Next, we'll train a linear regressor using all the features in the data set, and see how well we do.  
+Let's define the same input function we've used previously for loading the data into a TensorFlow model.  
 
