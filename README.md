@@ -64,7 +64,7 @@ The key thing to notice is that for any given feature or column, 对于每个特
 the distribution of values between the train and validation splits should be roughly equal.训练集和验证集的划分应该一致  
 The fact that this is not the case is a real worry, 真正担心的是事实不是这样  
 and shows that we likely have a fault in the way that our train and validation split was created.说明区分训练集和验证集时有错误  
-
+ 
 ## Task 3: Return to the Data Importing and Pre-Processing Code, and See if You Spot Any Bugs  
 If you do, go ahead and fix the bug. Don't spend more than a minute or two looking. If you can't find the bug, check the solution.  
 When you've found and fixed the issue, re-run latitude / longitude plotting cell above and confirm that our sanity checks look better.
