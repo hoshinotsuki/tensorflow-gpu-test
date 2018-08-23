@@ -26,6 +26,13 @@
 （处理离群值后）
 
 
+## 2.Validation
+we're working with the California housing data set,to try and predict median_house_value at the city block level from 1990 census data.  
+
+### Setup
+#### First off, let's load up and prepare our data.
+##### # 加上随机化处理，否则训练集和验证集的分布不一致
+
 
 
 
