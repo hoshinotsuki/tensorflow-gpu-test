@@ -329,14 +329,14 @@ def train_model(
 
     # Output a graph of loss metrics over periods.
     plt.figure(num, figsize=(13, 16))
-    plt.subplot(2, 2, 3)
+    ax2 = plt.subplot2grid((13, 16), (0, 7), colspan=9)
     plt.ylabel("RMSE")
     plt.xlabel("Periods")
     plt.title("Root Mean Squared Error vs. Periods")
-    plt.tight_layout()
     plt.plot(training_rmse, label="training")
     plt.plot(validation_rmse, label="validation")
     plt.legend()
+    plt.tight_layout()
     return linear_regressor
 
 
