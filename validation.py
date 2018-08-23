@@ -36,17 +36,8 @@ Original file is located at
 # limitations under the License.
 
 """# Validation
-
-**Learning Objectives:**
-  * Use multiple features, instead of a single feature, to further improve the effectiveness of a model
-  * Debug issues in model input data
-  * Use a test data set to check if a model is overfitting the validation data
-
-As in the prior exercises, we're working with the [California housing data set](https://developers.google.com/machine-learning/crash-course/california-housing-data-description), to try and predict `median_house_value` at the city block level from 1990 census data.
-
-## Setup
-
-First off, let's load up and prepare our data. This time, we're going to work with multiple features, so we'll modularize the logic for preprocessing the features a bit:
+ 
+## Setup 
 """
 
 
@@ -121,36 +112,9 @@ validation_targets = preprocess_targets(california_housing_dataframe.tail(5000))
 validation_targets.describe()
 
 """## Task 1: Examine the Data
-Okay, let's look at the data above. We have `9` input features that we can use.
-
-Take a quick skim over the table of values. Everything look okay? See how many issues you can spot. Don't worry if you don't have a background in statistics; common sense  will get you far.
-
-After you've had a chance to look over the data yourself, check the solution for some additional thoughts on how to verify data.
-
-### Solution
-
-Let's check our data against some baseline expectations:
-
-* For some values, like `median_house_value`, we can check to see if these values fall within reasonable ranges (keeping in mind this was 1990 data — not today!).
-
-* For other values, like `latitude` and `longitude`, we can do a quick check to see if these line up with expected values from a quick Google search.
-
-If you look closely, you may see some oddities:
-
-* `median_income` is on a scale from about 3 to 15. It's not at all clear what this scale refers to—looks like maybe some log scale? It's not documented anywhere; all we can assume is that higher values correspond to higher income.
-
-* The maximum `median_house_value` is 500,001. This looks like an artificial cap of some kind.
-
-* Our `rooms_per_person` feature is generally on a sane scale, with a 75th percentile value of about 2. But there are some very large values, like 18 or 55, which may show some amount of corruption in the data.
-
-We'll use these features as given for now. But hopefully these kinds of examples can help to build a little intuition about how to check data that comes to you from an unknown source.
-
+ 
 ## Task 2: Plot Latitude/Longitude vs. Median House Value
-
-Let's take a close look at two features in particular: **`latitude`** and **`longitude`**. These are geographical coordinates of the city block in question.
-
-This might make a nice visualization — let's plot `latitude` and `longitude`, and use color to show the `median_house_value`.
-"""
+ """
 
 plt.figure(figsize=(13, 8))
 
@@ -179,46 +143,12 @@ plt.scatter(training_examples["longitude"],
             c=training_targets["median_house_value"] / training_targets["median_house_value"].max())
 _ = plt.plot()
 
-"""Wait a second...this should have given us a nice map of the state of California, with red showing up in expensive areas like the San Francisco and Los Angeles.
-
-The training set sort of does, compared to a [real map](https://www.google.com/maps/place/California/@37.1870174,-123.7642688,6z/data=!3m1!4b1!4m2!3m1!1s0x808fb9fe5f285e3d:0x8b5109a227086f55), but the validation set clearly doesn't.
-
-**Go back up and look at the data from Task 1 again.**
-
-Do you see any other differences in the distributions of features or targets between the training and validation data?
-
-### Solution
-
-Looking at the tables of summary stats above, it's easy to wonder how anyone would do a useful data check. What's the right 75<sup>th</sup> percentile value for total_rooms per city block?
-
-The key thing to notice is that for any given feature or column, the distribution of values between the train and validation splits should be roughly equal.
-
-The fact that this is not the case is a real worry, and shows that we likely have a fault in the way that our train and validation split was created.
-
+""" 
 ## Task 3:  Return to the Data Importing and Pre-Processing Code, and See if You Spot Any Bugs
-If you do, go ahead and fix the bug. Don't spend more than a minute or two looking. If you can't find the bug, check the solution.
-
-When you've found and fixed the issue, re-run `latitude` / `longitude` plotting cell above and confirm that our sanity checks look better.
-
-By the way, there's an important lesson here.
-
-**Debugging in ML is often *data debugging* rather than code debugging.**
-
-If the data is wrong, even the most advanced ML code can't save things.
-
-### Solution
-
-Take a look at how the data is randomized when it's read in.
-
-If we don't randomize the data properly before creating training and validation splits, then we may be in trouble if the data is given to us in some sorted order, which appears to be the case here.
-
+ 
 ## Task 4: Train and Evaluate a Model
 
-**Spend 5 minutes or so trying different hyperparameter settings.  Try to get the best validation performance you can.**
-
-Next, we'll train a linear regressor using all the features in the data set, and see how well we do.
-
-Let's define the same input function we've used previously for loading the data into a TensorFlow model.
+ 
 """
 
 def my_input_fn(features, targets, batch_size=1, shuffle=True, num_epochs=None):
@@ -262,24 +192,6 @@ def construct_feature_columns(input_features):
   return set([tf.feature_column.numeric_column(my_feature)
               for my_feature in input_features])
 
-"""Next, go ahead and complete the `train_model()` code below to set up the input functions and calculate predictions.
-
-**NOTE:** It's okay to reference the code from the previous exercises, but make sure to call `predict()` on the appropriate data sets.
-
-Compare the losses on training data and validation data. With a single raw feature, our best root mean squared error (RMSE) was of about 180.
-
-See how much better you can do now that we can use multiple features.
-
-Check the data using some of the methods we've looked at before.  These might include:
-
-   * Comparing distributions of predictions and actual target values
-
-   * Creating a scatter plot of predictions vs. target values
-
-   * Creating two scatter plots of validation data using `latitude` and `longitude`:
-      * One plot mapping color to actual target `median_house_value`
-      * A second plot mapping color to predicted `median_house_value` for side-by-side comparison.
-"""
 
 def train_model(
     learning_rate,
@@ -393,12 +305,6 @@ linear_regressor = train_model(
     validation_targets=validation_targets)
 
 """## Task 5: Evaluate on Test Data
-
-**In the cell below, load in the test data set and evaluate your model on it.**
-
-We've done a lot of iteration on our validation data.  Let's make sure we haven't overfit to the pecularities of that particular sample.
-
-How does your test performance compare to the validation performance?  What does this say about the generalization performance of your model?
 """
 
 california_housing_test_data = pd.read_csv("https://download.mlcc.google.com/mledu-datasets/california_housing_test.csv", sep=",")
