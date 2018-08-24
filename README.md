@@ -26,24 +26,24 @@
 （处理离群值后）
 </br></br></br>
 
-## 二、设置验证集：避免过拟合的风险
+## 二、Validation: Another Partition
 we're working with the California housing data set,to try and predict median_house_value at the city block level from 1990 census data. 
 
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/%E6%8D%95%E8%8E%B7.PNG)</br>
 
-# 验证
+# Validation
 
-**学习目标：**
-  * 使用多个特征而非单个特征来进一步提高模型的有效性
-  * 调试模型输入数据中的问题
-  * 使用测试数据集检查模型是否过拟合验证数据
+**Learning Objectives:**
+  * Use multiple features, instead of a single feature, to further improve the effectiveness of a model
+  * Debug issues in model input data
+  * Use a test data set to check if a model is overfitting the validation data  
   
+As in the prior exercises, we're working with the California housing data set, to try and predict `median_house_value` at the city block level from 1990 census data.  
+ 
 
-与在之前的练习中一样，我们将使用加利福尼亚州住房数据集，尝试根据 1990 年的人口普查数据在城市街区级别预测 `median_house_value`。
+## Setup
 
-## 设置
-
-我们首先加载并准备数据。这一次，我们将使用多个特征，因此我们会将逻辑模块化，以对特征进行预处理：
+First off, let's load up and prepare our data. This time, we're going to work with multiple features, so we'll modularize the logic for preprocessing the features a bit:  
 
 * 加上随机化处理，否则训练集和验证集的分布不一致  
 
