@@ -27,13 +27,17 @@
 </br></br></br>
 
 ## 二、设置验证集：避免过拟合的风险
-we're working with the California housing data set,to try and predict median_house_value at the city block level from 1990 census data.  
+we're working with the California housing data set,to try and predict median_house_value at the city block level from 1990 census data. 
+
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/%E6%8D%95%E8%8E%B7.PNG)</br>
+
 # 验证
 
 **学习目标：**
   * 使用多个特征而非单个特征来进一步提高模型的有效性
   * 调试模型输入数据中的问题
   * 使用测试数据集检查模型是否过拟合验证数据
+  
 
 与在之前的练习中一样，我们将使用加利福尼亚州住房数据集，尝试根据 1990 年的人口普查数据在城市街区级别预测 `median_house_value`。
 
