@@ -74,7 +74,8 @@ If you do, go ahead and fix the bug. Don't spend more than a minute or two looki
 When you've found and fixed the issue, re-run latitude / longitude plotting cell above and confirm that our sanity checks look better.
 By the way, there's an important lesson here.Debugging in ML is often data debugging rather than code debugging.  
 重要：ML的调试是数据调试，不是代码调试  
-If the data is wrong, even the most advanced ML code can't save things.  
+If the data is wrong, even the most advanced ML code can't save things.    
+  
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/%E6%9C%AA%E9%9A%8F%E6%9C%BA%E5%8C%96.PNG)
 （未随机化样本）
 
