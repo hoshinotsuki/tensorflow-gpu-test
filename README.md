@@ -72,16 +72,16 @@ This might make a nice visualization -let's plot `latitude` and `longitude`, and
 如何做一个有效的数据检查  
 * The key thing to notice is that for any given feature or column, 对于每个特征和特征列the distribution of values between the train and validation splits should be roughly equal.训练集和验证集的划分应该一致  
 * The fact that this is not the case is a real worry, 真正担心的是事实不是这样and shows that we likely have a fault in the way that our train and validation split was created.说明区分训练集和验证集时有错误  
- 
+  
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/%E6%9C%AA%E9%9A%8F%E6%9C%BA%E5%8C%96.PNG)
+（未随机化样本）  
+
 ## Task 3: Return to the Data Importing and Pre-Processing Code, and See if You Spot Any Bugs  
 If you do, go ahead and fix the bug. Don't spend more than a minute or two looking. If you can't find the bug, check the solution.  
 When you've found and fixed the issue, re-run latitude / longitude plotting cell above and confirm that our sanity checks look better.
 By the way, there's an important lesson here.Debugging in ML is often data debugging rather than code debugging.  
 重要：ML的调试是数据调试，不是代码调试  
 If the data is wrong, even the most advanced ML code can't save things.    
-  
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/%E6%9C%AA%E9%9A%8F%E6%9C%BA%E5%8C%96.PNG)
-（未随机化样本）
 
 Take a look at how the data is randomized when it's read in.数据读入的时候是否随机化  
 If we don't randomize the data properly before creating training and validation splits,then we may be in trouble if the data is given to us in some sorted order, which appears to be the case here.  
