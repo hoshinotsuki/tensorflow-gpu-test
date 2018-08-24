@@ -26,9 +26,12 @@
 （处理离群值后）
 </br></br></br>
 
-## 二、Validation: Another Partition
-we're working with the California housing data set,to try and predict median_house_value at the city block level from 1990 census data. 
+## 2.Validation: Another Partition  
+we're working with the California housing data set,to try and predict median_house_value at the city block level from 1990 census data.  
 
+code:[validation.py](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/validation.py "查看源码")  
+
+### workflow  
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/%E6%8D%95%E8%8E%B7.PNG)</br>
 
 # Validation
