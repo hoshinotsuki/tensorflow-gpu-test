@@ -41,10 +41,9 @@ we're working with the California housing data set,to try and predict median_hou
 
 我们首先加载并准备数据。这一次，我们将使用多个特征，因此我们会将逻辑模块化，以对特征进行预处理：
 
-* 加上随机化处理，否则训练集和验证集的分布不一致
- 
+* 加上随机化处理，否则训练集和验证集的分布不一致  
 
-For the training set, we'll choose the first 12000 examples, out of the total of 17000.
+For the training set, we'll choose the first 12000 examples, out of the total of 17000.  
 For the validation set, we'll choose the last 5000 examples, out of the total of 17000.
  
 ## Task 1: Examine the Data 
@@ -68,7 +67,7 @@ This might make a nice visualization -let's plot `latitude` and `longitude`, and
 * Looking at the tables of summary stats above, it's easy to wonder how anyone would do a useful data check.  
 如何做一个有效的数据检查  
 * The key thing to notice is that for any given feature or column, 对于每个特征和特征列the distribution of values between the train and validation splits should be roughly equal.训练集和验证集的划分应该一致  
-*The fact that this is not the case is a real worry, 真正担心的是事实不是这样and shows that we likely have a fault in the way that our train and validation split was created.说明区分训练集和验证集时有错误  
+* The fact that this is not the case is a real worry, 真正担心的是事实不是这样and shows that we likely have a fault in the way that our train and validation split was created.说明区分训练集和验证集时有错误  
  
 ## Task 3: Return to the Data Importing and Pre-Processing Code, and See if You Spot Any Bugs  
 If you do, go ahead and fix the bug. Don't spend more than a minute or two looking. If you can't find the bug, check the solution.  
@@ -76,10 +75,14 @@ When you've found and fixed the issue, re-run latitude / longitude plotting cell
 By the way, there's an important lesson here.Debugging in ML is often data debugging rather than code debugging.  
 重要：ML的调试是数据调试，不是代码调试  
 If the data is wrong, even the most advanced ML code can't save things.  
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/%E6%9C%AA%E9%9A%8F%E6%9C%BA%E5%8C%96.PNG)
+（未随机化样本）
 
 Take a look at how the data is randomized when it's read in.数据读入的时候是否随机化  
 If we don't randomize the data properly before creating training and validation splits,then we may be in trouble if the data is given to us in some sorted order, which appears to be the case here.  
 
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/%E9%9A%8F%E6%9C%BA%E5%8C%96.PNG)
+（随机化样本）
 
 ## Task 4: Train and Evaluate a Model  
 Next, we'll train a linear regressor using all the features in the data set, and see how well we do.  
