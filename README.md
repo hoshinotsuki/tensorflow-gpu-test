@@ -94,13 +94,12 @@ Let's define the same input function we've used previously for loading the data 
 
 ## Task 5: Evaluate on Test Data
 
-**In the cell below, load in the test data set and evaluate your model on it.**
-We've done a lot of iteration on our validation data.    
-Let's make sure we haven't overfit to the pecularities of that particular sample.   
-How does your test performance compare to the validation performance?   
-What does this say about the generalization performance of your model?    
+**load in the test data set and evaluate your model on it.**  
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/Figure_2.png)  
 （randomized test sample）  
+We've done a lot of iteration on our validation data. Let's make sure we haven't overfit to the pecularities of that particular sample.  
+How does your test performance compare to the validation performance?   
+What does this say about the generalization performance of your model?    
 **my ourput:Final RMSE (on test data): 161.66**
 
 
