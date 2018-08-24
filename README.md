@@ -77,33 +77,31 @@ This might make a nice visualization -let's plot `latitude` and `longitude`, and
 （unrandomized training sample and valuating sample）  
 
 ## Task 3: Return to the Data Importing and Pre-Processing Code, and See if You Spot Any Bugs  
-If you do, go ahead and fix the bug. Don't spend more than a minute or two looking. If you can't find the bug, check the solution.  
-When you've found and fixed the issue, re-run latitude / longitude plotting cell above and confirm that our sanity checks look better.
-By the way, there's an important lesson here.Debugging in ML is often data debugging rather than code debugging.  
+* There's an important lesson here.Debugging in ML is often data debugging rather than code debugging.  
 重要：ML的调试是数据调试，不是代码调试  
-If the data is wrong, even the most advanced ML code can't save things.    
+* If the data is wrong, even the most advanced ML code can't save things.    
+* Take a look at how the data is randomized when it's read in.数据读入的时候是否随机化  
+* If we don't randomize the data properly before creating training and validation splits,then we may be in trouble if the data is given to us in some sorted order, which appears to be the case here.  
 
-Take a look at how the data is randomized when it's read in.数据读入的时候是否随机化  
-If we don't randomize the data properly before creating training and validation splits,then we may be in trouble if the data is given to us in some sorted order, which appears to be the case here.  
-
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/Figure_1.png)
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/Figure_1.png)  
 （randomized training sample and valuating sample）
 
 ## Task 4: Train and Evaluate a Model  
 Next, we'll train a linear regressor using all the features in the data set, and see how well we do.  
 Let's define the same input function we've used previously for loading the data into a TensorFlow model.  
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/Figure_3.png)
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/Figure_3.png)  
 （Train and Evaluate）
 
 ## Task 5: Evaluate on Test Data
 
 **In the cell below, load in the test data set and evaluate your model on it.**
-We've done a lot of iteration on our validation data.  Let's make sure we haven't overfit to the pecularities of that particular sample. 
+We've done a lot of iteration on our validation data.    
+Let's make sure we haven't overfit to the pecularities of that particular sample.   
 How does your test performance compare to the validation performance?   
 What does this say about the generalization performance of your model?    
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/Figure_2.png)
-（randomized test sample）
-**mine:Final RMSE (on test data): 161.66**
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Validation/Figure_2.png)  
+（randomized test sample）  
+**my ourput:Final RMSE (on test data): 161.66**
 
 
 
