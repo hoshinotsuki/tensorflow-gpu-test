@@ -58,20 +58,17 @@ If you look closely, you may see some oddities:
 We'll use these features as given for now.But hopefully these kinds of examples can help to build a little intuition about how to check data that comes to you from an unknown source.
 
 ## Task 2: Plot Latitude/Longitude vs. Median House Value
-Let's take a close look at two features in particular:
+Let's take a close look at two features in particular:  
 **`latitude`** and **`longitude`**. These are geographical coordinates of the city block in question.
-This might make a nice visualization -let's plot 'latitude' and 'longitude', and use color to show the 'median_house_value'.
+This might make a nice visualization -let's plot `latitude` and `longitude`, and use color to show the `median_house_value`.
 
-
-# 封装成一个验证数据集的函数
-
-Wait a second...this should have given us a nice map of the state of California,with red showing up in expensive areas like the San Francisco and Los Angeles.红色表示高房价，像洛杉矶  
-The training set sort of does, compared to a real map, but the validation set clearly doesn't.训练集（12/17）比验证集（5/17）更像一个真正的地图，因为没有随机化    
-Looking at the tables of summary stats above, it's easy to wonder how anyone would do a useful data check.如何做一个有效的数据检查  
-The key thing to notice is that for any given feature or column, 对于每个特征和特征列  
-the distribution of values between the train and validation splits should be roughly equal.训练集和验证集的划分应该一致  
-The fact that this is not the case is a real worry, 真正担心的是事实不是这样  
-and shows that we likely have a fault in the way that our train and validation split was created.说明区分训练集和验证集时有错误  
+* Wait a second...this should have given us a nice map of the state of California,with red showing up in expensive areas like the San Francisco and Los Angeles.红色表示高房价，像洛杉矶  
+* The training set sort of does, compared to a real map, but the validation set clearly doesn't.  
+训练集（12/17）比验证集（5/17）更像一个真正的地图，因为没有随机化    
+* Looking at the tables of summary stats above, it's easy to wonder how anyone would do a useful data check.  
+如何做一个有效的数据检查  
+* The key thing to notice is that for any given feature or column, 对于每个特征和特征列the distribution of values between the train and validation splits should be roughly equal.训练集和验证集的划分应该一致  
+*The fact that this is not the case is a real worry, 真正担心的是事实不是这样and shows that we likely have a fault in the way that our train and validation split was created.说明区分训练集和验证集时有错误  
  
 ## Task 3: Return to the Data Importing and Pre-Processing Code, and See if You Spot Any Bugs  
 If you do, go ahead and fix the bug. Don't spend more than a minute or two looking. If you can't find the bug, check the solution.  
