@@ -153,7 +153,7 @@ Spend 5 minutes searching for a good set of features and training parameters. Th
 Plotting `latitude` vs. `median_house_value` shows that there really **isn't a linear relationship** there.
 
 Instead, there are a couple of peaks, which roughly correspond to Los Angeles and San Francisco.  
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/Isn't a linear relationship.png)   
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/Isn't%20a%20linear%20relationship.png.png)   
 (Isn't a linear relationship)
 
 **Try creating some synthetic features that do a better job with latitude.**
