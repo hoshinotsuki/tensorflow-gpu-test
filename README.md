@@ -103,7 +103,66 @@ Let's define the same input function we've used previously for loading the data 
 We've done a lot of iteration on our validation data. Let's make sure we haven't overfit to the pecularities of that particular sample.  
 How does your test performance compare to the validation performance?   
 What does this say about the generalization performance of your model?    
-**my ourput:Final RMSE (on test data): 161.66**
+**my ourput:Final RMSE (on test data): 161.66**  
+  
+    
+      
+      
+    
+    
+# 3.Feature Sets
 
+**Learning Objective:** Create a minimal set of features that performs just as well as a more complex feature set
 
+So far, we've thrown all of our features into the model. Models with fewer features use fewer resources and are easier to maintain. Let's see if we can build a model on a minimal set of housing features that will perform equally as well as one that uses all the features in the data set.
+
+## Setup
+
+As before, let's load and prepare the California housing data.
+
+## Task 1: Develop a Good Feature Set
+
+**What's the best performance you can get with just 2 or 3 features?**
+
+A **correlation matrix** shows **pairwise correlations**, both for each feature compared to the target and for each feature compared to other features.
+
+Here, correlation is defined as the [Pearson correlation coefficient](https://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient)**皮尔逊相关系数**.  You don't have to understand the mathematical details for this exercise.
+
+Correlation values have the following meanings:
+
+  * `-1.0`: perfect negative correlation
+  * `0.0`: no correlation
+  * `1.0`: perfect positive correlation
+
+Features that have **strong positive or negative correlations** with the **target** will add information to our model. We can use the correlation matrix to find such **strongly correlated features**.
+
+We'd also like to have features that aren't so strongly correlated with each other, so that they add **independent information**.
+
+Use this information to try removing features.  You can also try developing additional **synthetic features**, such as ratios of two raw features.
+
+For convenience, we've included the training code from the previous exercise.
+
+Spend 5 minutes searching for a good set of features and training parameters. Then check the solution to see what we chose. Don't forget that different features may require different learning parameters.
+
+## Task 2: Make Better Use of Latitude
+
+Plotting `latitude` vs. `median_house_value` shows that there really **isn't a linear relationship** there.
+
+Instead, there are a couple of peaks, which roughly correspond to Los Angeles and San Francisco.
+
+**Try creating some synthetic features that do a better job with latitude.**
+
+For example, you could have a feature that maps `latitude` to a value of `|latitude - 38|`, and call this `distance_from_san_francisco`.
+
+Or you could break the space into 10 different buckets.  `latitude_32_to_33`, `latitude_33_to_34`, etc., each showing a value of `1.0` if `latitude` is within that bucket range and a value of `0.0` otherwise.
+
+Use the correlation matrix to help guide development, and then add them to your model if you find something that looks good.
+
+What's the best validation performance you can get?
+
+### Solution
+
+Aside from `latitude`, we'll also keep `median_income`, to compare with the previous results.
+
+We decided to bucketize the latitude. This is fairly straightforward in Pandas using `Series.apply`.
 
