@@ -127,6 +127,8 @@ As before, let's load and prepare the California housing data.
 A **correlation matrix** shows **pairwise correlations**, both for each feature compared to the target and for each feature compared to other features.
 
 Here, correlation is defined as the [Pearson correlation coefficient](https://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient)**皮尔逊相关系数**.  You don't have to understand the mathematical details for this exercise.
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/df_corr().png)   
+（correlation matrix）
 
 Correlation values have the following meanings:
 
@@ -142,13 +144,17 @@ Use this information to try removing features.  You can also try developing addi
 
 For convenience, we've included the training code from the previous exercise.
 
-Spend 5 minutes searching for a good set of features and training parameters. Then check the solution to see what we chose. Don't forget that different features may require different learning parameters.
+Spend 5 minutes searching for a good set of features and training parameters. Then check the solution to see what we chose. Don't forget that different features may require different learning parameters.  
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/unbinning.png)  
+(unbinning)
 
 ## Task 2: Make Better Use of Latitude
 
 Plotting `latitude` vs. `median_house_value` shows that there really **isn't a linear relationship** there.
 
-Instead, there are a couple of peaks, which roughly correspond to Los Angeles and San Francisco.
+Instead, there are a couple of peaks, which roughly correspond to Los Angeles and San Francisco.  
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/Isn't a linear relationship.png)   
+(Isn't a linear relationship)
 
 **Try creating some synthetic features that do a better job with latitude.**
 
@@ -165,4 +171,6 @@ What's the best validation performance you can get?
 Aside from `latitude`, we'll also keep `median_income`, to compare with the previous results.
 
 We decided to bucketize the latitude. This is fairly straightforward in Pandas using `Series.apply`.
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/binning.png)  
+（binning）
 
