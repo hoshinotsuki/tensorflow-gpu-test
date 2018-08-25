@@ -127,7 +127,7 @@ As before, let's load and prepare the California housing data.
 A **correlation matrix** shows **pairwise correlations**, both for each feature compared to the target and for each feature compared to other features.
 
 Here, correlation is defined as the [Pearson correlation coefficient](https://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient)**皮尔逊相关系数**.  You don't have to understand the mathematical details for this exercise.
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/df_corr().png)   
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/df_corr().PNG)   
 （correlation matrix）
 
 Correlation values have the following meanings:
@@ -153,7 +153,7 @@ Spend 5 minutes searching for a good set of features and training parameters. Th
 Plotting `latitude` vs. `median_house_value` shows that there really **isn't a linear relationship** there.
 
 Instead, there are a couple of peaks, which roughly correspond to Los Angeles and San Francisco.  
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/Isn't%20a%20linear%20relationship.png.png)   
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/Isn't%20a%20linear%20relationship.png)   
 (Isn't a linear relationship)
 
 **Try creating some synthetic features that do a better job with latitude.**
