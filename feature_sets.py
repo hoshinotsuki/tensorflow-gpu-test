@@ -296,6 +296,7 @@ plt.figure(num=2,figsize=(13,7))
 plt.title("Isn't a linear relationship")
 plt.scatter(training_examples["latitude"], training_targets["median_house_value"])
 
+
 """**Try creating some synthetic features that do a better job with latitude.**
 
 For example, you could have a feature that maps `latitude` to a value of `|latitude - 38|`, and call this `distance_from_san_francisco`.
@@ -326,8 +327,6 @@ def select_and_transform_features(source_df):
 
 selected_training_examples = select_and_transform_features(training_examples)
 selected_validation_examples = select_and_transform_features(validation_examples)
-selected_training_examples.hist()
-
 
 # _ = train_model(
 #     learning_rate=0.01,
