@@ -172,5 +172,99 @@ Aside from `latitude`, we'll also keep `median_income`, to compare with the prev
 
 We decided to bucketize the latitude. This is fairly straightforward in Pandas using `Series.apply`.
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Feature_Set/binning.png)  
-（binning）
+（binning）  
+  
+  
 
+# 4.Feature Crosses
+
+**Learning Objectives:**
+  * Improve a linear regression model with the addition of additional synthetic features (this is a continuation of the previous exercise)
+  * Use an input function to convert pandas `DataFrame` objects to `Tensors` and invoke the input function in `fit()` and `predict()` operations
+  * Use the FTRL optimization algorithm for model training
+  * Create new synthetic features through one-hot encoding, binning, and feature crosses
+
+## Setup
+
+First, as we've done in previous exercises, let's define the input and create the data-loading code.
+
+## FTRL Optimization Algorithm
+
+High dimensional linear models benefit from using a variant of gradient-based optimization called FTRL. 
+This algorithm has the benefit of scaling the learning rate differently for different coefficients, 
+which can be useful if some features **rarely** take **non-zero values** 
+(it also is well suited to support L1 regularization).  
+高维度线性模型可受益于使用一种基于梯度的优化方法，叫做 FTRL。
+该算法的优势是针对不同系数以不同方式调整学习速率，
+如果某些特征很少采用非零值，该算法可能比较实用（也非常适合支持 L1 正则化）。 
+
+We can apply FTRL using the [FtrlOptimizer](https://www.tensorflow.org/api_docs/python/tf/train/FtrlOptimizer).
+
+## One-Hot Encoding for Discrete Features
+
+Discrete (i.e. strings, enumerations, integers) features are usually converted into families of binary features before training a logistic regression model.
+
+For example, suppose we created a synthetic feature that can take any of the values `0`, `1` or `2`, and that we have a few training points:
+
+| # | feature_value |
+|---|---------------|
+| 0 |             2 |
+| 1 |             0 |
+| 2 |             1 |
+
+For each possible categorical value, we make a new **binary** feature of **real values** that can take one of just two possible values: 1.0 if the example has that value, and 0.0 if not. In the example above, the categorical feature would be converted into three features, and the training points now look like:
+
+| # | feature_value_0 | feature_value_1 | feature_value_2 |
+|---|-----------------|-----------------|-----------------|
+| 0 |             0.0 |             0.0 |             1.0 |
+| 1 |             1.0 |             0.0 |             0.0 |
+| 2 |             0.0 |             1.0 |             0.0 |
+
+## Bucketized (Binned) Features
+
+Bucketization is also known as binning.
+
+We can bucketize `population` into the following 3 buckets (for instance):
+- `bucket_0` (`< 5000`): corresponding to less populated blocks
+- `bucket_1` (`5000 - 25000`): corresponding to mid populated blocks
+- `bucket_2` (`> 25000`): corresponding to highly populated blocks
+
+Given the preceding bucket definitions, the following `population` vector:
+
+    [[10001], [42004], [2500], [18000]]
+
+becomes the following bucketized feature vector:
+
+    [[1], [2], [0], [1]]
+
+The feature values are now the `bucket indices`. Note that these indices are considered to be `discrete features`. Typically, these will be further converted in `one-hot representations` as above, but this is done transparently.
+
+To define feature columns for bucketized features, instead of using `numeric_column`, we can use [`bucketized_column`](https://www.tensorflow.org/api_docs/python/tf/feature_column/bucketized_column), which takes a `numeric column` as input and transforms it to a `bucketized feature` using the bucket boundaries specified in the `boundardies` argument. The following code defines bucketized feature columns for `households` and `longitude`; the `get_quantile_based_boundaries` function calculates boundaries based on quantiles, so that each bucket contains an `equal number of elements`.  
+
+## Task 1: Train the Model on Bucketized Feature Columns
+**Bucketize all the real valued features in our example, train the model and see if the results improve.**
+
+In the preceding code block, two real valued columns (namely `households` and `longitude`) have been transformed into `bucketized feature columns`. Your task is to bucketize the rest of the columns, then run the code to train the model. There are various heuristics to find the range of the buckets. This exercise uses a `quantile-based` technique, which chooses the bucket boundaries in such a way that each bucket has the same number of examples.
+
+### Solution
+
+You may be wondering how to determine how many buckets to use. That is of course data-dependent. Here, we just selected arbitrary values so as to obtain a not-too-large model.  
+
+## Feature Crosses
+
+Crossing two (or more) features is a clever way to learn `non-linear relations` using a `linear model`. In our problem, if we just use the feature `latitude` for learning, the model might learn that city blocks at a particular latitude (or within a particular range of latitudes since we have bucketized it) are more likely to be expensive than others. Similarly for the feature `longitude`. However, if we cross `longitude` by `latitude`, the crossed feature represents a well defined city block. If the model learns that certain city blocks (within range of latitudes and longitudes) are more likely to be more expensive than others, it is a stronger signal than two features considered individually.
+
+Currently, the feature columns API only supports `discrete features` for crosses. To cross two continuous values, like `latitude` or `longitude`, we can `bucketize them`.
+
+If we cross the `latitude` and `longitude` features (supposing, for example, that `longitude` was bucketized into `2` buckets, while `latitude` has `3` buckets), we actually get six crossed binary features. Each of these features will get its own separate weight when we train the model.
+
+## Task 2: Train the Model Using Feature Crosses
+
+**Add a feature cross of `longitude` and `latitude` to your model, train it, and determine whether the results improve.**
+
+Refer to the TensorFlow API docs for [`crossed_column()`](https://www.tensorflow.org/api_docs/python/tf/feature_column/crossed_column) to build the feature column for your cross. Use a `hash_bucket_size` of `1000`.
+
+
+## Optional Challenge: Try Out More Synthetic Features
+
+So far, we've tried simple bucketized columns and feature crosses, but there are many more combinations that could potentially improve the results. For example, you could cross multiple columns. What happens if you vary the number of buckets? What other synthetic features can you think of? Do they improve the model?
