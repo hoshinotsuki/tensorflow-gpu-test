@@ -326,7 +326,7 @@ To train the linear regression model using [LinearRegressor](https://www.tensorf
 `LinearRegressor` uses the L2 loss, which doesn't do a great job at penalizing misclassifications when the output is interpreted as a probability.  For example, there should be a huge difference whether a negative example is classified as positive with a probability of 0.9 vs 0.9999, but L2 loss doesn't strongly differentiate these cases.
 
 In contrast, `LogLoss` penalizes these "confidence errors" much more heavily.  Remember, `LogLoss` is defined as:
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/logloss.png)  
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/logloss.PNG)  
 
 But first, we'll need to obtain the prediction values. We could use `LinearRegressor.predict` to obtain these.
 
