@@ -303,7 +303,6 @@ def preprocess_targets(california_housing_dataframe):
   return output_targets
 ```
 
-
 ## How Would Linear Regression Fare?
 To see why logistic regression is effective, let us first train a naive model that uses linear regression. This model will use labels with values in the set `{0, 1}` and will try to predict a continuous value that is as close as possible to `0` or `1`. Furthermore, we wish to interpret the output as a probability, so it would be ideal if the output will be within the range `(0, 1)`. We would then apply a threshold of `0.5` to determine the label.
 To train the linear regression model using [LinearRegressor](https://www.tensorflow.org/api_docs/python/tf/estimator/LinearRegressor).
@@ -329,7 +328,6 @@ In contrast, `LogLoss` penalizes these "confidence errors" much more heavily.  R
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/logloss.PNG)  
 
 But first, we'll need to obtain the prediction values. We could use `LinearRegressor.predict` to obtain these.
-
 Given the predictions and the targets, can we calculate `LogLoss`?
 
 ### Solution
@@ -363,7 +361,6 @@ validation_log_loss = metrics.log_loss(validation_targets, validation_probabilit
 （LogLoss on the Validation Set）  
 
 
-
 ## Task 3: Calculate Accuracy and plot a ROC Curve for the Validation Set
 
 A few of the metrics useful for classification are the model [accuracy](https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification), the [ROC curve](https://en.wikipedia.org/wiki/Receiver_operating_characteristic) and the area under the ROC curve (AUC). We'll examine these metrics.
@@ -375,11 +372,8 @@ evaluation_metrics = linear_classifier.evaluate(input_fn=predict_validation_inpu
 print("AUC on the validation set: %0.2f" % evaluation_metrics['auc'])
 print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
 ```
-
 AUC on the validation set: 0.70  
 Accuracy on the validation set: 0.75  
-
-
 
 You may use class probabilities, such as those calculated by `LinearClassifier.predict`,
 and Sklearn's [roc_curve](http://scikit-learn.org/stable/modules/model_evaluation.html#roc-metrics) to
@@ -394,7 +388,6 @@ false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(
 ```
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/Figure_4.png)  
 （LROC Curve for the Validation Set）  
-
 
 **See if you can tune the learning settings of the model trained at Task 2 to improve AUC.**
 
@@ -417,8 +410,8 @@ One possible solution that works is to just train for longer, as long as we don'
 We can do this by increasing the number the steps, the batch size, or both.
 All metrics improve at the same time, so our loss metric is a good proxy for both AUC and accuracy.
 Notice how it takes many, many more iterations just to squeeze a few more units of AUC. This commonly happens. But often even this small gain is worth the costs.  
-
-
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/Figure_6.png)  
+（LogLoss on the Validation Set）  
 ```python
 evaluation_metrics = linear_classifier.evaluate(input_fn=predict_validation_input_fn)
 print("AUC on the validation set: %0.2f" % evaluation_metrics['auc'])
@@ -426,6 +419,3 @@ print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
 ```
 AUC on the validation set: 0.79  
 Accuracy on the validation set: 0.78  
-
-![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/Figure_6.png)  
-（LogLoss on the Validation Set）  
