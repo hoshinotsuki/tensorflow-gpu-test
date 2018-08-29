@@ -6,7 +6,7 @@
 [2.validation](https://github.com/hoshinotsuki/tensorflow-gpu-test#2validation-another-partition)  
 [3.feature-sets](https://github.com/hoshinotsuki/tensorflow-gpu-test#3feature-sets)  
 [4.feature-crosses](https://github.com/hoshinotsuki/tensorflow-gpu-test#4feature-crosses)  
-[5.logistic_regression](https://github.com/hoshinotsuki/tensorflow-gpu-test#5logistic-regression)  
+[5.logistic-regression](https://github.com/hoshinotsuki/tensorflow-gpu-test#5logistic-regression)  
 
 ## 1.synthetic features and outliers
 根据加州房价数据，建立SGD模型。合成特征作为单一输入，预测房价中位数，截去离群值样本后的预测对比。  
@@ -273,11 +273,8 @@ Refer to the TensorFlow API docs for [`crossed_column()`](https://www.tensorflow
 
 ## Optional Challenge: Try Out More Synthetic Features
 
-So far, we've tried simple bucketized columns and feature crosses, but there are many more combinations that could potentially improve the results. For example, you could cross multiple columns. What happens if you vary the number of buckets? What other synthetic features can you think of? Do they improve the model?  
-  
-   
-     
-     
+So far, we've tried simple bucketized columns and feature crosses, but there are many more combinations that could potentially improve the results. For example, you could cross multiple columns. What happens if you vary the number of buckets? What other synthetic features can you think of? Do they improve the model?<br><br><br>
+
 # 5.Logistic Regression
 
 **Learning Objectives:**
@@ -296,16 +293,31 @@ Given features describing a city block, we wish to predict if it is a high-cost 
 
 Run the cells below to load the data and prepare the input features and targets.
 
+Note how the code below is slightly different from the previous exercises. Instead of using `median_house_value` as target, we create a new binary target, `median_house_value_is_high`. <br>
 
-Note how the code below is slightly different from the previous exercises. Instead of using `median_house_value` as target, we create a new binary target, `median_house_value_is_high`. 
+```python
+def preprocess_targets(california_housing_dataframe):  
+  output_targets = pd.DataFrame()
+  output_targets["median_house_value_is_high"] = (
+    california_housing_dataframe["median_house_value"] > 265000).astype(float)
+  return output_targets
+```
+
 
 ## How Would Linear Regression Fare?
 To see why logistic regression is effective, let us first train a naive model that uses linear regression. This model will use labels with values in the set `{0, 1}` and will try to predict a continuous value that is as close as possible to `0` or `1`. Furthermore, we wish to interpret the output as a probability, so it would be ideal if the output will be within the range `(0, 1)`. We would then apply a threshold of `0.5` to determine the label.
-
-Run the cells below to train the linear regression model using [LinearRegressor](https://www.tensorflow.org/api_docs/python/tf/estimator/LinearRegressor).
-
+To train the linear regression model using [LinearRegressor](https://www.tensorflow.org/api_docs/python/tf/estimator/LinearRegressor).
+```python
+  # Create a linear regressor object.
+  my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
+  my_optimizer = tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0)
+  linear_regressor = tf.estimator.LinearRegressor(
+      feature_columns=construct_feature_columns(training_examples),
+      optimizer=my_optimizer
+  )
+```
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/Figure_1.png)  
-（Linear Regression）  
+（Linear Regression ）  
 
 ## Task 1: Can We Calculate LogLoss for These Predictions?
 
@@ -314,25 +326,39 @@ Run the cells below to train the linear regression model using [LinearRegressor]
 `LinearRegressor` uses the L2 loss, which doesn't do a great job at penalizing misclassifications when the output is interpreted as a probability.  For example, there should be a huge difference whether a negative example is classified as positive with a probability of 0.9 vs 0.9999, but L2 loss doesn't strongly differentiate these cases.
 
 In contrast, `LogLoss` penalizes these "confidence errors" much more heavily.  Remember, `LogLoss` is defined as:
-
-$$Log Loss = \sum_{(x,y)\in D} -y \cdot log(y_{pred}) - (1 - y) \cdot log(1 - y_{pred})$$
-
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/logloss.png)  
 
 But first, we'll need to obtain the prediction values. We could use `LinearRegressor.predict` to obtain these.
 
 Given the predictions and the targets, can we calculate `LogLoss`?
 
 ### Solution
+```python
+validation_predictions = linear_regressor.predict(input_fn=predict_validation_input_fn)
+validation_predictions = np.array([item['predictions'][0] for item in validation_predictions])
+_ = plt.hist(validation_predictions)
+```  
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/Figure_2.png)  
 （hist(validation_predictions)）  
 
 ## Task 2: Train a Logistic Regression Model and Calculate LogLoss on the Validation Set
 
-To use logistic regression, simply use [LinearClassifier](https://www.tensorflow.org/api_docs/python/tf/estimator/LinearClassifier) instead of `LinearRegressor`. Complete the code below.
+To use logistic regression, simply use [LinearClassifier](https://www.tensorflow.org/api_docs/python/tf/estimator/LinearClassifier) instead of `LinearRegressor`. 
 
 **NOTE**: When running `train()` and `predict()` on a `LinearClassifier` model, you can access the real-valued predicted probabilities via the `"probabilities"` key in the returned dict—e.g., `predictions["probabilities"]`. Sklearn's [log_loss](http://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html) function is handy for calculating LogLoss using these probabilities.
 
 ### Solution
+```python
+# Take a break and compute predictions.    
+training_probabilities = linear_classifier.predict(input_fn=predict_training_input_fn)
+training_probabilities = np.array([item['probabilities'] for item in training_probabilities])
+    
+validation_probabilities = linear_classifier.predict(input_fn=predict_validation_input_fn)
+validation_probabilities = np.array([item['probabilities'] for item in validation_probabilities])
+    
+training_log_loss = metrics.log_loss(training_targets, training_probabilities)
+validation_log_loss = metrics.log_loss(validation_targets, validation_probabilities)
+```
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/Figure_3.png)  
 （LogLoss on the Validation Set）  
 
@@ -350,7 +376,7 @@ print("AUC on the validation set: %0.2f" % evaluation_metrics['auc'])
 print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
 ```
 
-AUC on the validation set: 0.70
+AUC on the validation set: 0.70  
 Accuracy on the validation set: 0.75  
 
 
@@ -358,6 +384,14 @@ Accuracy on the validation set: 0.75
 You may use class probabilities, such as those calculated by `LinearClassifier.predict`,
 and Sklearn's [roc_curve](http://scikit-learn.org/stable/modules/model_evaluation.html#roc-metrics) to
 obtain the true positive and false positive rates needed to plot a ROC curve.  
+
+```python
+validation_probabilities = linear_classifier.predict(input_fn=predict_validation_input_fn)
+# Get just the probabilities for the positive class.
+validation_probabilities = np.array([item['probabilities'][1] for item in validation_probabilities])
+false_positive_rate, true_positive_rate, thresholds = metrics.roc_curve(
+    validation_targets, validation_probabilities)
+```
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/Figure_4.png)  
 （LROC Curve for the Validation Set）  
 
@@ -370,8 +404,12 @@ Often times, certain metrics improve at the detriment of others, and you'll need
 
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/Figure_5.png)  
 （improve AUC ）  
-
-AUC on the validation set: 0.75
+```python
+evaluation_metrics = linear_classifier.evaluate(input_fn=predict_validation_input_fn)
+print("AUC on the validation set: %0.2f" % evaluation_metrics['auc'])
+print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
+```
+AUC on the validation set: 0.75  
 Accuracy on the validation set: 0.77
 
 ### Solution
@@ -380,13 +418,14 @@ We can do this by increasing the number the steps, the batch size, or both.
 All metrics improve at the same time, so our loss metric is a good proxy for both AUC and accuracy.
 Notice how it takes many, many more iterations just to squeeze a few more units of AUC. This commonly happens. But often even this small gain is worth the costs.  
 
+
+```python
+evaluation_metrics = linear_classifier.evaluate(input_fn=predict_validation_input_fn)
+print("AUC on the validation set: %0.2f" % evaluation_metrics['auc'])
+print("Accuracy on the validation set: %0.2f" % evaluation_metrics['accuracy'])
+```
+AUC on the validation set: 0.79  
+Accuracy on the validation set: 0.78  
+
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/classification/Figure_6.png)  
 （LogLoss on the Validation Set）  
-
-AUC on the validation set: 0.79
-Accuracy on the validation set: 0.78
-
-
-
-
-
