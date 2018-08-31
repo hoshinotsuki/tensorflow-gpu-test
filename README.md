@@ -517,6 +517,107 @@ Can you use your secret weapon—L1 regularization—to tune the model to satisf
 The following code will help you get started. There are many ways to apply regularization to your model. Here, we chose to do it using `FtrlOptimizer`, which is designed to give better results with L1 regularization than standard gradient descent.
 
 Again, the model will train on the entire data set, so expect it to run slower than normal.  
+
+```python
+def train_linear_classifier_model(
+    learning_rate,
+    regularization_strength,
+    steps,
+    batch_size,
+    feature_columns,
+    training_examples,
+    training_targets,
+    validation_examples,
+    validation_targets):
+  """Trains a linear regression model.
+  
+  In addition to training, this function also prints training progress information,
+  as well as a plot of the training and validation loss over time.
+  
+  Args:
+    learning_rate: A `float`, the learning rate.
+    regularization_strength: A `float` that indicates the strength of the L1
+       regularization. A value of `0.0` means no regularization.
+    steps: A non-zero `int`, the total number of training steps. A training step
+      consists of a forward and backward pass using a single batch.
+    feature_columns: A `set` specifying the input feature columns to use.
+    training_examples: A `DataFrame` containing one or more columns from
+      `california_housing_dataframe` to use as input features for training.
+    training_targets: A `DataFrame` containing exactly one column from
+      `california_housing_dataframe` to use as target for training.
+    validation_examples: A `DataFrame` containing one or more columns from
+      `california_housing_dataframe` to use as input features for validation.
+    validation_targets: A `DataFrame` containing exactly one column from
+      `california_housing_dataframe` to use as target for validation.
+      
+  Returns:
+    A `LinearClassifier` object trained on the training data.
+  """
+
+  periods = 7
+  steps_per_period = steps / periods
+
+  # Create a linear classifier object.
+  my_optimizer = tf.train.FtrlOptimizer(learning_rate=learning_rate, l1_regularization_strength=regularization_strength)
+  my_optimizer = tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0)
+  linear_classifier = tf.estimator.LinearClassifier(
+      feature_columns=feature_columns,
+      optimizer=my_optimizer
+  )
+  
+  # Create input functions.
+  training_input_fn = lambda: my_input_fn(training_examples, 
+                                          training_targets["median_house_value_is_high"], 
+                                          batch_size=batch_size)
+  predict_training_input_fn = lambda: my_input_fn(training_examples, 
+                                                  training_targets["median_house_value_is_high"], 
+                                                  num_epochs=1, 
+                                                  shuffle=False)
+  predict_validation_input_fn = lambda: my_input_fn(validation_examples, 
+                                                    validation_targets["median_house_value_is_high"], 
+                                                    num_epochs=1, 
+                                                    shuffle=False)
+  
+  # Train the model, but do so inside a loop so that we can periodically assess
+  # loss metrics.
+  print("Training model...")
+  print("LogLoss (on validation data):")
+  training_log_losses = []
+  validation_log_losses = []
+  for period in range (0, periods):
+    # Train the model, starting from the prior state.
+    linear_classifier.train(
+        input_fn=training_input_fn,
+        steps=steps_per_period
+    )
+    # Take a break and compute predictions.
+    training_probabilities = linear_classifier.predict(input_fn=predict_training_input_fn)
+    training_probabilities = np.array([item['probabilities'] for item in training_probabilities])
+    
+    validation_probabilities = linear_classifier.predict(input_fn=predict_validation_input_fn)
+    validation_probabilities = np.array([item['probabilities'] for item in validation_probabilities])
+    
+    # Compute training and validation loss.
+    training_log_loss = metrics.log_loss(training_targets, training_probabilities)
+    validation_log_loss = metrics.log_loss(validation_targets, validation_probabilities)
+    # Occasionally print the current loss.
+    print("  period %02d : %0.2f" % (period, validation_log_loss))
+    # Add the loss metrics from this period to our list.
+    training_log_losses.append(training_log_loss)
+    validation_log_losses.append(validation_log_loss)
+  print("Model training finished.")
+
+  # Output a graph of loss metrics over periods.
+  plt.ylabel("LogLoss")
+  plt.xlabel("Periods")
+  plt.title("LogLoss vs. Periods")
+  plt.tight_layout()
+  plt.plot(training_log_losses, label="training")
+  plt.plot(validation_log_losses, label="validation")
+  plt.legend()
+
+  return linear_classifier
+```
  
 ### Solution
 A regularization strength of 0.1 should be sufficient. Note that there is a compromise to be struck:
