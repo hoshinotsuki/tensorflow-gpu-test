@@ -4,9 +4,10 @@
 
 [1.synthetic_features_and_outliers](https://github.com/hoshinotsuki/tensorflow-gpu-test#%E4%B8%80%E5%90%88%E6%88%90%E7%89%B9%E5%BE%81%E5%92%8C%E7%A6%BB%E7%BE%A4%E5%80%BC)  
 [2.validation](https://github.com/hoshinotsuki/tensorflow-gpu-test#2validation-another-partition)  
-[3.feature-sets](https://github.com/hoshinotsuki/tensorflow-gpu-test#3feature-sets)  
-[4.feature-crosses](https://github.com/hoshinotsuki/tensorflow-gpu-test#4feature-crosses)  
-[5.logistic-regression](https://github.com/hoshinotsuki/tensorflow-gpu-test#5logistic-regression)  
+[3.feature sets](https://github.com/hoshinotsuki/tensorflow-gpu-test#3feature-sets)  
+[4.feature crosses](https://github.com/hoshinotsuki/tensorflow-gpu-test#4feature-crosses)  
+[5.logistic regression](https://github.com/hoshinotsuki/tensorflow-gpu-test#5logistic-regression)  
+[6.sparsity and l1 regularization](https://github.com/hoshinotsuki/tensorflow-gpu-test#6sparsity-and-l1-regularization)  
 
 ## 1.synthetic features and outliers
 根据加州房价数据，建立SGD模型。合成特征作为单一输入，预测房价中位数，截去离群值样本后的预测对比。  
@@ -421,7 +422,7 @@ AUC on the validation set: 0.79
 Accuracy on the validation set: 0.78  
 
 # 6.Sparsity and L1 Regularization
-
+[code](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/6.sparsity_and_l1_regularization.py)
 **Learning Objectives:**
   * Calculate the size of a model
   * Apply L1 regularization to reduce the size of a model by increasing sparsity
