@@ -529,31 +529,6 @@ def train_linear_classifier_model(
     training_targets,
     validation_examples,
     validation_targets):
-  """Trains a linear regression model.
-  
-  In addition to training, this function also prints training progress information,
-  as well as a plot of the training and validation loss over time.
-  
-  Args:
-    learning_rate: A `float`, the learning rate.
-    regularization_strength: A `float` that indicates the strength of the L1
-       regularization. A value of `0.0` means no regularization.
-    steps: A non-zero `int`, the total number of training steps. A training step
-      consists of a forward and backward pass using a single batch.
-    feature_columns: A `set` specifying the input feature columns to use.
-    training_examples: A `DataFrame` containing one or more columns from
-      `california_housing_dataframe` to use as input features for training.
-    training_targets: A `DataFrame` containing exactly one column from
-      `california_housing_dataframe` to use as target for training.
-    validation_examples: A `DataFrame` containing one or more columns from
-      `california_housing_dataframe` to use as input features for validation.
-    validation_targets: A `DataFrame` containing exactly one column from
-      `california_housing_dataframe` to use as target for validation.
-      
-  Returns:
-    A `LinearClassifier` object trained on the training data.
-  """
-
   periods = 7
   steps_per_period = steps / periods
 
@@ -608,13 +583,6 @@ def train_linear_classifier_model(
   print("Model training finished.")
 
   # Output a graph of loss metrics over periods.
-  plt.ylabel("LogLoss")
-  plt.xlabel("Periods")
-  plt.title("LogLoss vs. Periods")
-  plt.tight_layout()
-  plt.plot(training_log_losses, label="training")
-  plt.plot(validation_log_losses, label="validation")
-  plt.legend()
 
   return linear_classifier
 ```  
