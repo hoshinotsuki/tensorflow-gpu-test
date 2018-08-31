@@ -422,7 +422,7 @@ AUC on the validation set: 0.79
 Accuracy on the validation set: 0.78  
 
 # 6.Sparsity and L1 Regularization
-[code](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/6.sparsity_and_l1_regularization.py)
+
 **Learning Objectives:**
   * Calculate the size of a model
   * Apply L1 regularization to reduce the size of a model by increasing sparsity
@@ -430,6 +430,8 @@ Accuracy on the validation set: 0.78
 One way to reduce complexity is to use a regularization function that encourages weights to be exactly zero. For linear models such as regression, a zero weight is equivalent to not using the corresponding feature at all. In addition to avoiding overfitting, the resulting model will be more efficient.
 
 L1 regularization is a good way to increase sparsity.
+
+code:[sparsity and l1 regularization.py](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/6.sparsity_and_l1_regularization.py)  
 
 ## Setup
 ```python
