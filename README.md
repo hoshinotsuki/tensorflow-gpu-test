@@ -690,3 +690,6 @@ linear_classifier = train_linear_classifier_model(
     validation_targets=validation_targets)
 print("Model size:", model_size(linear_classifier))
 ```  
+
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Regularization/Figure_1.png)  
+(logloss)
