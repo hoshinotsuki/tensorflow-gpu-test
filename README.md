@@ -617,7 +617,8 @@ def train_linear_classifier_model(
   plt.legend()
 
   return linear_classifier
-```
+```  
+
  
 ### Solution
 A regularization strength of 0.1 should be sufficient. Note that there is a compromise to be struck:
