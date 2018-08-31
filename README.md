@@ -690,6 +690,16 @@ linear_classifier = train_linear_classifier_model(
     validation_targets=validation_targets)
 print("Model size:", model_size(linear_classifier))
 ```  
-
+Training model...  
+LogLoss (on validation data):  
+period 00 : 0.30  
+period 01 : 0.27  
+period 02 : 0.26  
+period 03 : 0.25  
+period 04 : 0.24  
+period 05 : 0.24  
+period 06 : 0.23  
+Model training finished.  
+Model size: 753  
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Regularization/Figure_1.png)  
 (logloss)
