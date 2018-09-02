@@ -616,4 +616,112 @@ period 06 : 0.23
 Model training finished.  
 Model size: 753  
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Regularization/Figure_1.png)  
-(logloss)
+(logloss)  
+
+
+# 7.Intro to Neural Networks
+
+**Learning Objectives:**
+  * Define a neural network (NN) and its hidden layers using the TensorFlow `DNNRegressor` class
+  * Train a neural network to learn nonlinearities in a dataset and achieve better performance than a linear regression model
+
+In the previous exercises, we used synthetic features to help our model incorporate nonlinearities.
+
+One important set of nonlinearities was around latitude and longitude, but there may be others.
+
+We'll also switch back, for now, to a standard regression task, rather than the logistic regression task from the previous exercise. That is, we'll be predicting `median_house_value` directly.
+
+## Setup
+
+First, let's load and prepare the data.
+
+## Building a Neural Network
+
+The NN is defined by the [DNNRegressor](https://www.tensorflow.org/api_docs/python/tf/estimator/DNNRegressor) class.
+
+Use **`hidden_units`** to define the structure of the NN.  The `hidden_units` argument provides a list of ints, where each int corresponds to a hidden layer and indicates the number of nodes in it.  For example, consider the following assignment:
+
+`hidden_units=[3,10]`
+
+The preceding assignment specifies a neural net with two hidden layers:
+
+* The first hidden layer contains 3 nodes.
+* The second hidden layer contains 10 nodes.
+
+If we wanted to add more layers, we'd add more ints to the list. For example, `hidden_units=[10,20,30,40]` would create four layers with ten, twenty, thirty, and forty units, respectively.
+
+By default, all hidden layers will use ReLu activation and will be fully connected.  
+
+```python
+  # Create a DNNRegressor object.
+  my_optimizer = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
+  my_optimizer = tf.contrib.estimator.clip_gradients_by_norm(my_optimizer, 5.0)
+  dnn_regressor = tf.estimator.DNNRegressor(
+      feature_columns=construct_feature_columns(training_examples),
+      hidden_units=hidden_units,
+      optimizer=my_optimizer,
+  )
+```  
+## Task 1: Train a NN Model
+
+**Adjust hyperparameters, aiming to drop RMSE below 110.**
+
+Train a NN model.  
+
+Recall that in the **linear regression** exercise with many features, an RMSE of 110 or so was pretty good.  We'll aim to beat that.
+
+Your task here is to modify various learning settings to improve accuracy on validation data.
+
+**Overfitting** is a real potential hazard for NNs.  You can look at the gap between loss on training data and loss on validation data to help judge if your model is starting to overfit. **If the gap starts to grow, that is usually a sure sign of overfitting.**
+
+Because of the number of different possible settings, it's strongly recommended that you take notes on each trial to help guide your development process.
+
+Also, when you get a good setting, try running it multiple times and see how repeatable your result is. NN weights are typically initialized to small random values, so you should see differences from run to run.
+
+### Solution
+
+**NOTE:** This selection of parameters is somewhat arbitrary. Here we've tried combinations that are increasingly complex, combined with training for longer, until the error falls below our objective. This may not be the best combination; others may attain an even lower RMSE. If your aim is to find the model that can attain the best error, then you'll want to use a more rigorous process, like a parameter search.
+
+```python
+dnn_regressor = train_nn_regression_model(
+    learning_rate=0.001,
+    steps=2000,
+    batch_size=100,
+    hidden_units=[10, 10],
+    training_examples=training_examples,
+    training_targets=training_targets,
+    validation_examples=validation_examples,
+    validation_targets=validation_targets)
+```
+
+## Task 2: Evaluate on Test Data
+
+**Confirm that your validation performance results hold up on test data.**
+
+Once you have a model you're happy with, evaluate it on test data to compare that to validation performance. 
+
+### Solution 
+
+Similar to what the code at the top does, we just need to load the appropriate data file, preprocess it and call predict and mean_squared_error.
+
+Note that we don't have to randomize the test data, since we will use all records.  
+```python
+california_housing_test_data = pd.read_csv("D:\datas\california_housing_test.csv", sep=",")
+
+test_examples = preprocess_features(california_housing_test_data)
+test_targets = preprocess_targets(california_housing_test_data)
+
+predict_testing_input_fn = lambda: my_input_fn(test_examples, 
+                                               test_targets["median_house_value"], 
+                                               num_epochs=1, 
+                                               shuffle=False)
+
+test_predictions = dnn_regressor.predict(input_fn=predict_testing_input_fn)
+test_predictions = np.array([item['predictions'][0] for item in test_predictions])
+
+root_mean_squared_error = math.sqrt(
+    metrics.mean_squared_error(test_predictions, test_targets))
+
+print("Final RMSE (on test data): %0.2f" % root_mean_squared_error)
+```
+
