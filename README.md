@@ -8,6 +8,7 @@
 [4.feature crosses](https://github.com/hoshinotsuki/tensorflow-gpu-test#4feature-crosses)  
 [5.logistic regression](https://github.com/hoshinotsuki/tensorflow-gpu-test#5logistic-regression)  
 [6.sparsity and l1 regularization](https://github.com/hoshinotsuki/tensorflow-gpu-test#6sparsity-and-l1-regularization)  
+[7.Intro to Neural Networks](https://github.com/hoshinotsuki/tensorflow-gpu-test#7intro-to-neural-networks)  
 
 ## 1.synthetic features and outliers
 根据加州房价数据，建立SGD模型。合成特征作为单一输入，预测房价中位数，截去离群值样本后的预测对比。  
@@ -693,6 +694,7 @@ dnn_regressor = train_nn_regression_model(
     validation_examples=validation_examples,
     validation_targets=validation_targets)
 ```
+![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Neural%20Networks/Figure_1.png)  
 
 ## Task 2: Evaluate on Test Data
 
