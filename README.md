@@ -695,6 +695,22 @@ dnn_regressor = train_nn_regression_model(
     validation_targets=validation_targets)
 ```
 ![image](https://github.com/hoshinotsuki/tensorflow-gpu-test/blob/master/figures/Neural%20Networks/Figure_1.png)  
+Training model...
+
+RMSE (on training data): 
+  period 00 : 178.94  
+  period 01 : 169.60  
+  period 02 : 163.27  
+  period 03 : 157.87  
+  period 04 : 155.07  
+  period 05 : 146.88  
+  period 06 : 138.48  
+  period 07 : 133.14  
+  period 08 : 123.84  
+  period 09 : 113.69  
+Model training finished.  
+Final RMSE (on training data):   113.69  
+Final RMSE (on validation data): 115.92
 
 ## Task 2: Evaluate on Test Data
 
@@ -726,4 +742,4 @@ root_mean_squared_error = math.sqrt(
 
 print("Final RMSE (on test data): %0.2f" % root_mean_squared_error)
 ```
-
+Final RMSE (on test data): 110.78
